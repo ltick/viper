@@ -24,6 +24,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var iniExample = []byte(`
+;comment one
+#comment two
+string = testing
+string_1 = testing_1
+string_1.1 = "testing"
+string_2.1 = "testing"
+string_3.1.1 = "testing_1"
+string_3.1.2 = "testing_2"
+int = 8080
+float = 3.1415976
+boolean = false
+boolean_1 = true
+switcher= on
+switcher_1= off
+switcher_2 = OFF
+switcher_3 = ON
+switcher_4 = Y
+switcher_5 = N
+flag = 1
+[dev]
+string_1.1 = "testing_dev"
+string_2.2 = "testing_dev"
+`)
+
 var yamlExample = []byte(`Hacker: true
 name: steve
 hobbies:
@@ -53,7 +78,7 @@ title = "TOML Example"
 
 [owner]
 organization = "MongoDB"
-Bio = "MongoDB Chief Developer Advocate & Hacker at Large"
+Bio = "MongoDB Chief developer Advocate & Hacker at Large"
 dob = 1979-05-27T07:32:00Z # First class dates? Why not?`)
 
 var jsonExample = []byte(`{
@@ -66,7 +91,7 @@ var jsonExample = []byte(`{
                 { "type": "Regular" },
                 { "type": "Chocolate" },
                 { "type": "Blueberry" },
-                { "type": "Devil's Food" }
+                { "type": "devil's Food" }
             ]
     }
 }`)
@@ -108,6 +133,10 @@ var remoteExample = []byte(`{
 func initConfigs() {
 	Reset()
 	var r io.Reader
+	SetConfigType("ini")
+	r = bytes.NewReader(iniExample)
+	unmarshalReader(r, v.config)
+
 	SetConfigType("yaml")
 	r = bytes.NewReader(yamlExample)
 	unmarshalReader(r, v.config)
@@ -141,6 +170,10 @@ func initConfig(typ, config string) {
 	if err := unmarshalReader(r, v.config); err != nil {
 		panic(err)
 	}
+}
+
+func initINI() {
+	initConfig("ini", string(iniExample))
 }
 
 func initYAML() {
@@ -314,6 +347,11 @@ func TestAliasInConfigFile(t *testing.T) {
 	assert.Equal(t, false, Get("beard"))
 }
 
+func TestINI(t *testing.T) {
+	initINI()
+	assert.Equal(t, "testing", Get("string"))
+}
+
 func TestYML(t *testing.T) {
 	initYAML()
 	assert.Equal(t, "steve", Get("name"))
@@ -432,9 +470,156 @@ func TestSetEnvReplacer(t *testing.T) {
 func TestAllKeys(t *testing.T) {
 	initConfigs()
 
-	ks := sort.StringSlice{"title", "newkey", "owner.organization", "owner.dob", "owner.bio", "name", "beard", "ppu", "batters.batter", "hobbies", "clothing.jacket", "clothing.trousers", "clothing.pants.size", "age", "hacker", "id", "type", "eyes", "p_id", "p_ppu", "p_batters.batter.type", "p_type", "p_name", "foos"}
+	ks := sort.StringSlice{
+		"string",
+		"string_1.1",
+		"string_2.1",
+		"string_3.1.1",
+		"string_3.1.2",
+		"int",
+		"float",
+		"boolean",
+		"boolean_1",
+		"switcher",
+		"switcher_1",
+		"switcher_2",
+		"switcher_3",
+		"switcher_4",
+		"switcher_5",
+		"flag",
+		"dev.boolean",
+		"dev.boolean_1",
+		"dev.flag",
+		"dev.float",
+		"dev.int",
+		"dev.string",
+		"dev.string_1.1",
+		"dev.string_2.1",
+		"dev.string_2.2",
+		"dev.string_3.1.1",
+		"dev.string_3.1.2",
+		"dev.switcher",
+		"dev.switcher_1",
+		"dev.switcher_2",
+		"dev.switcher_3",
+		"dev.switcher_4",
+		"dev.switcher_5",
+		"title",
+		"newkey",
+		"owner.organization",
+		"owner.dob",
+		"owner.bio",
+		"name",
+		"beard",
+		"ppu",
+		"batters.batter",
+		"hobbies",
+		"clothing.jacket",
+		"clothing.trousers",
+		"clothing.pants.size",
+		"age",
+		"hacker",
+		"id",
+		"type",
+		"eyes",
+		"p_id",
+		"p_ppu",
+		"p_batters.batter.type",
+		"p_type",
+		"p_name",
+		"foos",
+	}
 	dob, _ := time.Parse(time.RFC3339, "1979-05-27T07:32:00Z")
-	all := map[string]interface{}{"owner": map[string]interface{}{"organization": "MongoDB", "bio": "MongoDB Chief Developer Advocate & Hacker at Large", "dob": dob}, "title": "TOML Example", "ppu": 0.55, "eyes": "brown", "clothing": map[string]interface{}{"trousers": "denim", "jacket": "leather", "pants": map[string]interface{}{"size": "large"}}, "id": "0001", "batters": map[string]interface{}{"batter": []interface{}{map[string]interface{}{"type": "Regular"}, map[string]interface{}{"type": "Chocolate"}, map[string]interface{}{"type": "Blueberry"}, map[string]interface{}{"type": "Devil's Food"}}}, "hacker": true, "beard": true, "hobbies": []interface{}{"skateboarding", "snowboarding", "go"}, "age": 35, "type": "donut", "newkey": "remote", "name": "Cake", "p_id": "0001", "p_ppu": "0.55", "p_name": "Cake", "p_batters": map[string]interface{}{"batter": map[string]interface{}{"type": "Regular"}}, "p_type": "donut", "foos": []map[string]interface{}{map[string]interface{}{"foo": []map[string]interface{}{map[string]interface{}{"key": 1}, map[string]interface{}{"key": 2}, map[string]interface{}{"key": 3}, map[string]interface{}{"key": 4}}}}}
+	all := map[string]interface{}{
+		"string":     "testing",
+		"string_1":   map[string]interface{}{"1": "testing"},
+		"string_2":   map[string]interface{}{"1": "testing"},
+		"string_3":   map[string]interface{}{"1": map[string]interface{}{"1": "testing_1", "2": "testing_2"}},
+		"int":        8080,
+		"float":      3.1415976,
+		"boolean":    false,
+		"boolean_1":  true,
+		"switcher":   true,
+		"switcher_1": false,
+		"switcher_2": false,
+		"switcher_3": true,
+		"switcher_4": true,
+		"switcher_5": false,
+		"flag":       1,
+		"dev": map[string]interface{}{
+			"string":          "testing",
+			"string_1":        map[string]interface{}{"1": "testing_dev"},
+			"string_2":        map[string]interface{}{"1": "testing", "2": "testing_dev"},
+			"string_3":        map[string]interface{}{"1": map[string]interface{}{"1": "testing_1", "2": "testing_2"}},
+			"int":             8080,
+			"float":           3.1415976,
+			"boolean":         false,
+			"boolean_1":       true,
+			"switcher":        true,
+			"switcher_1":      false,
+			"switcher_2":      false,
+			"switcher_3":      true,
+			"switcher_4":      true,
+			"switcher_5":      false,
+			"flag":            1,
+		},
+		"owner": map[string]interface{}{
+			"organization": "MongoDB",
+			"bio":          "MongoDB Chief developer Advocate & Hacker at Large",
+			"dob":          dob,
+		},
+		"title": "TOML Example",
+		"ppu":   0.55,
+		"eyes":  "brown",
+		"clothing": map[string]interface{}{
+			"trousers": "denim",
+			"jacket":   "leather",
+			"pants":    map[string]interface{}{"size": "large"},
+		},
+		"id": "0001",
+		"batters": map[string]interface{}{
+			"batter": []interface{}{
+				map[string]interface{}{
+					"type": "Regular",
+				},
+				map[string]interface{}{
+					"type": "Chocolate",
+				},
+				map[string]interface{}{
+					"type": "Blueberry",
+				},
+				map[string]interface{}{
+					"type": "devil's Food",
+				},
+			},
+		},
+		"hacker":  true,
+		"beard":   true,
+		"hobbies": []interface{}{"skateboarding", "snowboarding", "go"},
+		"age":     35,
+		"type":    "donut",
+		"newkey":  "remote",
+		"name":    "Cake",
+		"p_id":    "0001",
+		"p_ppu":   "0.55",
+		"p_name":  "Cake",
+		"p_batters": map[string]interface{}{
+			"batter": map[string]interface{}{
+				"type": "Regular",
+			},
+		},
+		"p_type": "donut",
+		"foos": []map[string]interface{}{
+			map[string]interface{}{
+				"foo": []map[string]interface{}{
+					map[string]interface{}{"key": 1},
+					map[string]interface{}{"key": 2},
+					map[string]interface{}{"key": 3},
+					map[string]interface{}{"key": 4},
+				},
+			},
+		},
+	}
 
 	var allkeys sort.StringSlice
 	allkeys = AllKeys()
@@ -668,7 +853,7 @@ func TestFindsNestedKeys(t *testing.T) {
 				"type": "Blueberry",
 			},
 			map[string]interface{}{
-				"type": "Devil's Food",
+				"type": "devil's Food",
 			},
 		},
 		"hobbies": []interface{}{
@@ -686,7 +871,7 @@ func TestFindsNestedKeys(t *testing.T) {
 				}, map[string]interface{}{
 					"type": "Blueberry",
 				}, map[string]interface{}{
-					"type": "Devil's Food",
+					"type": "devil's Food",
 				},
 			},
 		},
@@ -694,10 +879,10 @@ func TestFindsNestedKeys(t *testing.T) {
 		"age":  35,
 		"owner": map[string]interface{}{
 			"organization": "MongoDB",
-			"bio":          "MongoDB Chief Developer Advocate & Hacker at Large",
+			"bio":          "MongoDB Chief developer Advocate & Hacker at Large",
 			"dob":          dob,
 		},
-		"owner.bio": "MongoDB Chief Developer Advocate & Hacker at Large",
+		"owner.bio": "MongoDB Chief developer Advocate & Hacker at Large",
 		"type":      "donut",
 		"id":        "0001",
 		"name":      "Cake",
@@ -1041,6 +1226,15 @@ func TestCaseInsensitive(t *testing.T) {
 		typ     string
 		content string
 	}{
+        {"ini", `
+aBcD=1
+[eF]
+gH=2
+iJk=3
+Lm.nO=4
+Lm.P.Q=5
+Lm.P.R=6
+`},
 		{"yaml", `
 aBcD: 1
 eF:
@@ -1180,7 +1374,6 @@ func doTestCaseInsensitive(t *testing.T, typ, config string) {
 	assert.Equal(t, 3, cast.ToInt(Get("ef.ijk")))
 	assert.Equal(t, 4, cast.ToInt(Get("ef.lm.no")))
 	assert.Equal(t, 5, cast.ToInt(Get("ef.lm.p.q")))
-
 }
 
 func BenchmarkGetBool(b *testing.B) {
