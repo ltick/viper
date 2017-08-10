@@ -53,7 +53,7 @@
   branch = "master"
   name = "github.com/ltick/viper"
   packages = ["."]
-  revision = "079fb92d3d696655467cd33d670e9b4107c208dd"
+  revision = "a5430129b574503604d8416f0f79c15a8c74d9e5"
 
 [[projects]]
   name = "github.com/magiconair/properties"

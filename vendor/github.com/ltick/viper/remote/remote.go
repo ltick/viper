@@ -8,8 +8,8 @@ package remote
 
 import (
 	"bytes"
-	"github.com/spf13/viper"
-	crypt "github.com/xordataexchange/crypt/config"
+	crypt "github.com/ltick/crypt/config"
+	"github.com/ltick/viper"
 	"io"
 	"os"
 )
@@ -81,16 +81,26 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		if err != nil {
 			return nil, err
 		}
-		if rp.Provider() == "etcd" {
+		switch rp.Provider() {
+		case "etcd":
 			cm, err = crypt.NewEtcdConfigManager([]string{rp.Endpoint()}, kr)
-		} else {
+		case "consul":
 			cm, err = crypt.NewConsulConfigManager([]string{rp.Endpoint()}, kr)
+		case "memcache":
+			cm, err = crypt.NewMemcacheConfigManager([]string{rp.Endpoint()}, kr)
+		case "zookeeper":
+			cm, err = crypt.NewZookeeperConfigManager([]string{rp.Endpoint()}, kr)
 		}
 	} else {
-		if rp.Provider() == "etcd" {
+		switch rp.Provider() {
+		case "etcd":
 			cm, err = crypt.NewStandardEtcdConfigManager([]string{rp.Endpoint()})
-		} else {
+		case "consul":
 			cm, err = crypt.NewStandardConsulConfigManager([]string{rp.Endpoint()})
+		case "memcache":
+			cm, err = crypt.NewStandardMemcacheConfigManager([]string{rp.Endpoint()})
+		case "zookeeper":
+			cm, err = crypt.NewStandardZookeeperConfigManager([]string{rp.Endpoint()})
 		}
 	}
 	if err != nil {

@@ -189,7 +189,7 @@ func New() *Viper {
 func Reset() {
 	v = New()
 	SupportedExts = []string{"ini", "json", "toml", "yaml", "yml", "hcl"}
-	SupportedRemoteProviders = []string{"etcd", "consul"}
+	SupportedRemoteProviders = []string{"zookeeper", "memcache","etcd", "consul"}
 }
 
 type defaultRemoteProvider struct {
@@ -230,7 +230,7 @@ type RemoteProvider interface {
 var SupportedExts = []string{"ini", "json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl"}
 
 // SupportedRemoteProviders are universally supported remote providers.
-var SupportedRemoteProviders = []string{"etcd", "consul"}
+var SupportedRemoteProviders = []string{"zookeeper", "memcache", "etcd", "consul"}
 
 func OnConfigChange(run func(in fsnotify.Event)) { v.OnConfigChange(run) }
 func (v *Viper) OnConfigChange(run func(in fsnotify.Event)) {
@@ -1307,7 +1307,7 @@ func (v *Viper) insensitiviseMaps() {
 // Retrieve the first found remote configuration.
 func (v *Viper) getKeyValueConfig() error {
 	if RemoteConfig == nil {
-		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/spf13/viper/remote'")
+		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
 	}
 
 	for _, rp := range v.remoteProviders {
