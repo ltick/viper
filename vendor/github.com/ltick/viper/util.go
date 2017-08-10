@@ -27,6 +27,7 @@ import (
 	"github.com/spf13/cast"
 	jww "github.com/spf13/jwalterweatherman"
 	"gopkg.in/yaml.v2"
+	"github.com/ltick/go-ini"
 )
 
 // ConfigParseError denotes failing to parse configuration file.
@@ -157,6 +158,11 @@ func unmarshallConfigReader(in io.Reader, c map[string]interface{}, configType s
 	buf.ReadFrom(in)
 
 	switch strings.ToLower(configType) {
+	case "ini":
+		if err := ini.Unmarshal(buf.Bytes(), &c); err != nil {
+            fmt.Println(err)
+			return ConfigParseError{err}
+		}
 	case "yaml", "yml":
 		if err := yaml.Unmarshal(buf.Bytes(), &c); err != nil {
 			return ConfigParseError{err}
