@@ -89,7 +89,8 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		case "memcache":
 			cm, err = crypt.NewMemcacheConfigManager([]string{rp.Endpoint()}, kr)
 		case "zookeeper":
-			cm, err = crypt.NewZookeeperConfigManager([]string{rp.Endpoint()}, kr)
+			config := rp.Config()
+			cm, err = crypt.NewZookeeperConfigManager([]string{rp.Endpoint()}, config["user"], config["password"], kr)
 		}
 	} else {
 		switch rp.Provider() {
@@ -100,7 +101,8 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		case "memcache":
 			cm, err = crypt.NewStandardMemcacheConfigManager([]string{rp.Endpoint()})
 		case "zookeeper":
-			cm, err = crypt.NewStandardZookeeperConfigManager([]string{rp.Endpoint()})
+			config := rp.Config()
+			cm, err = crypt.NewStandardZookeeperConfigManager([]string{rp.Endpoint()}, config["user"], config["password"])
 		}
 	}
 	if err != nil {

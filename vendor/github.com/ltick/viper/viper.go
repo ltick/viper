@@ -189,13 +189,14 @@ func New() *Viper {
 func Reset() {
 	v = New()
 	SupportedExts = []string{"ini", "json", "toml", "yaml", "yml", "hcl"}
-	SupportedRemoteProviders = []string{"zookeeper", "memcache","etcd", "consul"}
+	SupportedRemoteProviders = []string{"zookeeper", "memcache", "etcd", "consul"}
 }
 
 type defaultRemoteProvider struct {
 	provider      string
 	endpoint      string
 	path          string
+	config        map[string]string
 	secretKeyring string
 }
 
@@ -211,6 +212,10 @@ func (rp defaultRemoteProvider) Path() string {
 	return rp.path
 }
 
+func (rp defaultRemoteProvider) Config() string {
+	return rp.config
+}
+
 func (rp defaultRemoteProvider) SecretKeyring() string {
 	return rp.secretKeyring
 }
@@ -223,6 +228,7 @@ type RemoteProvider interface {
 	Provider() string
 	Endpoint() string
 	Path() string
+	Config() map[string]string
 	SecretKeyring() string
 }
 
@@ -261,7 +267,7 @@ func (v *Viper) WatchConfig() {
 			for {
 				select {
 				case event := <-watcher.Events:
-					// we only care about the config file
+				// we only care about the config file
 					if filepath.Clean(event.Name) == configFile {
 						if event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Create == fsnotify.Create {
 							err := v.ReadInConfig()
@@ -348,10 +354,10 @@ func (v *Viper) AddConfigPath(in string) {
 // To retrieve a config file called myapp.json from /configs/myapp.json
 // you should set path to /configs and set config name (SetConfigName()) to
 // "myapp"
-func AddRemoteProvider(provider, endpoint, path string) error {
-	return v.AddRemoteProvider(provider, endpoint, path)
+func AddRemoteProvider(provider, endpoint, path string, config map[string]string) error {
+	return v.AddRemoteProvider(provider, endpoint, path, config)
 }
-func (v *Viper) AddRemoteProvider(provider, endpoint, path string) error {
+func (v *Viper) AddRemoteProvider(provider, endpoint, path string, config map[string]string) error {
 	if !stringInSlice(provider, SupportedRemoteProviders) {
 		return UnsupportedRemoteProviderError(provider)
 	}
@@ -361,6 +367,7 @@ func (v *Viper) AddRemoteProvider(provider, endpoint, path string) error {
 			endpoint: endpoint,
 			provider: provider,
 			path:     path,
+			config:   config,
 		}
 		if !v.providerPathExists(rp) {
 			v.remoteProviders = append(v.remoteProviders, rp)
@@ -379,11 +386,11 @@ func (v *Viper) AddRemoteProvider(provider, endpoint, path string) error {
 // you should set path to /configs and set config name (SetConfigName()) to
 // "myapp"
 // Secure Remote Providers are implemented with github.com/xordataexchange/crypt
-func AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string) error {
-	return v.AddSecureRemoteProvider(provider, endpoint, path, secretkeyring)
+func AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string, config map[string]string) error {
+	return v.AddSecureRemoteProvider(provider, endpoint, path, secretkeyring, config)
 }
 
-func (v *Viper) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string) error {
+func (v *Viper) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring string, config map[string]string) error {
 	if !stringInSlice(provider, SupportedRemoteProviders) {
 		return UnsupportedRemoteProviderError(provider)
 	}
@@ -393,6 +400,7 @@ func (v *Viper) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring 
 			endpoint:      endpoint,
 			provider:      provider,
 			path:          path,
+			config:          config,
 			secretKeyring: secretkeyring,
 		}
 		if !v.providerPathExists(rp) {
@@ -479,7 +487,7 @@ func (v *Viper) searchMapWithPathPrefixes(source map[string]interface{}, path []
 				// if the type of `next` is the same as the type being asserted
 				val = v.searchMapWithPathPrefixes(next.(map[string]interface{}), path[i:])
 			default:
-				// got a value but nested key expected, do nothing and look for next prefix
+			// got a value but nested key expected, do nothing and look for next prefix
 			}
 			if val != nil {
 				return val
@@ -1187,7 +1195,7 @@ func keyExists(k string, m map[string]interface{}) string {
 }
 
 func castToMapStringInterface(
-	src map[interface{}]interface{}) map[string]interface{} {
+src map[interface{}]interface{}) map[string]interface{} {
 	tgt := map[string]interface{}{}
 	for k, v := range src {
 		tgt[fmt.Sprintf("%v", k)] = v
@@ -1217,7 +1225,7 @@ func castMapFlagToMapInterface(src map[string]FlagValue) map[string]interface{} 
 // deep. Both map types are supported as there is a go-yaml fork that uses
 // `map[string]interface{}` instead.
 func mergeMaps(
-	src, tgt map[string]interface{}, itgt map[interface{}]interface{}) {
+src, tgt map[string]interface{}, itgt map[interface{}]interface{}) {
 	for sk, sv := range src {
 		tk := keyExists(sk, tgt)
 		if tk == "" {
@@ -1432,7 +1440,7 @@ func (v *Viper) flattenAndMergeMap(shadow map[string]bool, m map[string]interfac
 // shadowed by values from the first map.
 func (v *Viper) mergeFlatMap(shadow map[string]bool, m map[string]interface{}) map[string]bool {
 	// scan keys
-outer:
+	outer:
 	for k, _ := range m {
 		path := strings.Split(k, v.keyDelim)
 		// scan intermediate paths
