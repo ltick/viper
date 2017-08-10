@@ -1,10 +1,11 @@
 package consul
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
-	"github.com/xordataexchange/crypt/backend"
+	"github.com/ltick/crypt/backend"
 
 	"github.com/armon/consul-api"
 )
@@ -31,7 +32,25 @@ func (c *Client) Get(key string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if kv == nil {
+		return nil, fmt.Errorf("Key ( %s ) was not found.", key)
+	}
 	return kv.Value, nil
+}
+
+func (c *Client) List(key string) (backend.KVPairs, error) {
+	pairs, _, err := c.client.List(key, nil)
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		return nil, err
+	}
+	ret := make(backend.KVPairs, len(pairs), len(pairs))
+	for i, kv := range pairs {
+		ret[i] = &backend.KVPair{Key: kv.Key, Value: kv.Value}
+	}
+	return ret, nil
 }
 
 func (c *Client) Set(key string, value []byte) error {
@@ -52,6 +71,9 @@ func (c *Client) Watch(key string, stop chan bool) <-chan *backend.Response {
 				WaitIndex: c.waitIndex,
 			}
 			keypair, meta, err := c.client.Get(key, &opts)
+			if keypair == nil && err == nil {
+				err = fmt.Errorf("Key ( %s ) was not found.", key)
+			}
 			if err != nil {
 				respChan <- &backend.Response{nil, err}
 				time.Sleep(time.Second * 5)
