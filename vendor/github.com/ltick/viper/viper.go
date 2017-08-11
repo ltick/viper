@@ -419,6 +419,10 @@ func (v *Viper) providerPathExists(p *defaultRemoteProvider) bool {
 	return false
 }
 
+func (v *Viper) GetRemoteProviders() []RemoteProvider {
+	return v.remoteProviders
+}
+
 // searchMap recursively searches for a value for path in source map.
 // Returns nil if not found.
 // Note: This assumes that the path entries and map keys are lower cased.
