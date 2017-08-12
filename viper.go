@@ -212,7 +212,7 @@ func (rp defaultRemoteProvider) Path() string {
 	return rp.path
 }
 
-func (rp defaultRemoteProvider) Config() string {
+func (rp defaultRemoteProvider) Config() map[string]string {
 	return rp.config
 }
 
