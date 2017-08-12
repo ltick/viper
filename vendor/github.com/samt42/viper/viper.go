@@ -51,7 +51,6 @@ func init() {
 }
 
 type remoteConfigFactory interface {
-	Set(rp RemoteProvider, value []byte) error
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
 	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
@@ -345,13 +344,6 @@ func (v *Viper) AddConfigPath(in string) {
 			v.configPaths = append(v.configPaths, absin)
 		}
 	}
-}
-
-func (v *Viper) GetConfigManager() []*defaultRemoteProvider {
-
-	getConfigManager
-
-	return v.remoteProviders
 }
 
 // AddRemoteProvider adds a remote configuration source.

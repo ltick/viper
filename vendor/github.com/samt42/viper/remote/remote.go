@@ -16,18 +16,6 @@ import (
 
 type remoteConfigProvider struct{}
 
-func (rc remoteConfigProvider) Set(rp viper.RemoteProvider, value []byte) error {
-	cm, err := getConfigManager(rp)
-	if err != nil {
-		return nil, err
-	}
-	b, err := cm.Set(rp.Path(), value)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (rc remoteConfigProvider) Get(rp viper.RemoteProvider) (io.Reader, error) {
 	cm, err := getConfigManager(rp)
 	if err != nil {
