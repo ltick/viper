@@ -34,10 +34,6 @@
   name = "github.com/ltick/go-ini"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/ltick/viper"
-
-[[constraint]]
   name = "github.com/magiconair/properties"
   version = "1.7.3"
 
@@ -48,6 +44,10 @@
 [[constraint]]
   name = "github.com/pelletier/go-toml"
   version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/samt42/viper"
 
 [[constraint]]
   branch = "master"

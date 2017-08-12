@@ -9,7 +9,7 @@ package remote
 import (
 	"bytes"
 	crypt "github.com/ltick/crypt/config"
-	"github.com/ltick/viper"
+	"github.com/samt42/viper"
 	"io"
 	"os"
 )
