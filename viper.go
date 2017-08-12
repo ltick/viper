@@ -51,6 +51,7 @@ func init() {
 }
 
 type remoteConfigFactory interface {
+	Set(rp RemoteProvider, value []byte) error
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
 	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
@@ -267,7 +268,7 @@ func (v *Viper) WatchConfig() {
 			for {
 				select {
 				case event := <-watcher.Events:
-				// we only care about the config file
+					// we only care about the config file
 					if filepath.Clean(event.Name) == configFile {
 						if event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Create == fsnotify.Create {
 							err := v.ReadInConfig()
@@ -346,7 +347,10 @@ func (v *Viper) AddConfigPath(in string) {
 	}
 }
 
-func (v *Viper) GetRemoteProviders() []*defaultRemoteProvider {
+func (v *Viper) GetConfigManager() []*defaultRemoteProvider {
+
+	getConfigManager
+
 	return v.remoteProviders
 }
 
@@ -404,7 +408,7 @@ func (v *Viper) AddSecureRemoteProvider(provider, endpoint, path, secretkeyring 
 			endpoint:      endpoint,
 			provider:      provider,
 			path:          path,
-			config:          config,
+			config:        config,
 			secretKeyring: secretkeyring,
 		}
 		if !v.providerPathExists(rp) {
@@ -491,7 +495,7 @@ func (v *Viper) searchMapWithPathPrefixes(source map[string]interface{}, path []
 				// if the type of `next` is the same as the type being asserted
 				val = v.searchMapWithPathPrefixes(next.(map[string]interface{}), path[i:])
 			default:
-			// got a value but nested key expected, do nothing and look for next prefix
+				// got a value but nested key expected, do nothing and look for next prefix
 			}
 			if val != nil {
 				return val
@@ -1199,7 +1203,7 @@ func keyExists(k string, m map[string]interface{}) string {
 }
 
 func castToMapStringInterface(
-src map[interface{}]interface{}) map[string]interface{} {
+	src map[interface{}]interface{}) map[string]interface{} {
 	tgt := map[string]interface{}{}
 	for k, v := range src {
 		tgt[fmt.Sprintf("%v", k)] = v
@@ -1229,7 +1233,7 @@ func castMapFlagToMapInterface(src map[string]FlagValue) map[string]interface{} 
 // deep. Both map types are supported as there is a go-yaml fork that uses
 // `map[string]interface{}` instead.
 func mergeMaps(
-src, tgt map[string]interface{}, itgt map[interface{}]interface{}) {
+	src, tgt map[string]interface{}, itgt map[interface{}]interface{}) {
 	for sk, sv := range src {
 		tk := keyExists(sk, tgt)
 		if tk == "" {
@@ -1444,7 +1448,7 @@ func (v *Viper) flattenAndMergeMap(shadow map[string]bool, m map[string]interfac
 // shadowed by values from the first map.
 func (v *Viper) mergeFlatMap(shadow map[string]bool, m map[string]interface{}) map[string]bool {
 	// scan keys
-	outer:
+outer:
 	for k, _ := range m {
 		path := strings.Split(k, v.keyDelim)
 		// scan intermediate paths
