@@ -89,7 +89,7 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-  revision = "a7e034cadd2ec753df90d3ba6486b2c38ef42d89"
+  revision = "b631413efbc5de2d6bbe3ed308bb8417096f1f63"
 
 [[projects]]
   branch = "master"
@@ -161,7 +161,7 @@
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
+  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
 [solve-meta]
   analyzer-name = "dep"

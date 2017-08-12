@@ -346,7 +346,7 @@ func (v *Viper) AddConfigPath(in string) {
 	}
 }
 
-func (v *Viper) GetRemoteProviders() []RemoteProvider {
+func (v *Viper) GetRemoteProviders() []*defaultRemoteProvider {
 	return v.remoteProviders
 }
 
