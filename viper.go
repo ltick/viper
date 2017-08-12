@@ -51,7 +51,6 @@ func init() {
 }
 
 type remoteConfigFactory interface {
-	Set(rp RemoteProvider, value []byte) error
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
 	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
