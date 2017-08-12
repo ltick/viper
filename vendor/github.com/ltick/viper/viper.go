@@ -212,7 +212,7 @@ func (rp defaultRemoteProvider) Path() string {
 	return rp.path
 }
 
-func (rp defaultRemoteProvider) Config() string {
+func (rp defaultRemoteProvider) Config() map[string]string {
 	return rp.config
 }
 
@@ -417,10 +417,6 @@ func (v *Viper) providerPathExists(p *defaultRemoteProvider) bool {
 		}
 	}
 	return false
-}
-
-func (v *Viper) GetRemoteProviders() []RemoteProvider {
-	return v.remoteProviders
 }
 
 // searchMap recursively searches for a value for path in source map.

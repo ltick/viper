@@ -47,7 +47,7 @@
   branch = "master"
   name = "github.com/ltick/crypt"
   packages = ["backend","backend/consul","backend/etcd","backend/memcache","backend/zookeeper","config","encoding/secconf"]
-  revision = "5bec8b80594161c2f0c9f3aecbb372d06dd7a368"
+  revision = "605a53d5ad44150b6d6653b73b1bfcd85aec1acb"
 
 [[projects]]
   branch = "master"
@@ -59,7 +59,7 @@
   branch = "master"
   name = "github.com/ltick/viper"
   packages = ["."]
-  revision = "64e1155b21496e3ebe08b67110b7866157fccb0e"
+  revision = "fe03b6343518b76dff94166c005a6f9f91c06506"
 
 [[projects]]
   name = "github.com/magiconair/properties"
