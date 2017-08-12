@@ -346,6 +346,10 @@ func (v *Viper) AddConfigPath(in string) {
 	}
 }
 
+func (v *Viper) GetRemoteProviders() []RemoteProvider {
+	return v.remoteProviders
+}
+
 // AddRemoteProvider adds a remote configuration source.
 // Remote Providers are searched in the order they are added.
 // provider is a string value, "etcd" or "consul" are currently supported.
