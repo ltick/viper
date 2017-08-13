@@ -52,6 +52,7 @@ func init() {
 
 type remoteConfigFactory interface {
 	Set(rp RemoteProvider, value []byte) error
+    List(rp RemoteProvider) (map[string][]byte, error)
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
 	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
@@ -1293,7 +1294,26 @@ func (v *Viper) WriteRemoteConfig(value []byte) error {
 			return RemoteConfigError("Write RemoteConfig error: " + err.Error())
 		}
 	}
-    return nil
+	return nil
+}
+
+//ListRemoteConfig attempts to set configuration to a remote source
+func ListRemoteConfig() (map[string][]byte, error) { return v.ListRemoteConfig() }
+func (v *Viper) ListRemoteConfig() (map[string][]byte, error) {
+	if RemoteConfig == nil {
+		return nil, RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
+	}
+	list := make(map[string][]byte, 0)
+	for _, rp := range v.remoteProviders {
+		remoteList, err := RemoteConfig.List(rp)
+		if err != nil {
+			return nil, RemoteConfigError("List RemoteConfig error: " + err.Error())
+		}
+		for k, v := range remoteList {
+			list[k] = v
+		}
+	}
+	return list, nil
 }
 
 // ReadRemoteConfig attempts to get configuration from a remote source
