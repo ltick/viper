@@ -20,6 +20,7 @@ import (
 	"runtime"
 	"strings"
 	"unicode"
+    "errors"
 
 	"github.com/hashicorp/hcl"
 	"github.com/magiconair/properties"
@@ -153,6 +154,40 @@ func userHomeDir() string {
 	return os.Getenv("HOME")
 }
 
+func marshallConfigReader(c map[string]interface{}, configType string) (out io.Reader, err error) {
+    switch strings.ToLower(configType) {
+    case "ini":
+        outByte, err := ini.Marshal(c)
+        if err != nil {
+            return nil, ConfigParseError{err}
+        }
+        out = bytes.NewReader(outByte)
+    case "yaml", "yml":
+        outByte, err := yaml.Marshal(c)
+        if err != nil {
+            return nil, ConfigParseError{err}
+        }
+        out = bytes.NewReader(outByte)
+    case "json":
+        outByte, err := json.Marshal(c)
+        if err != nil {
+            return nil, ConfigParseError{err}
+        }
+        out = bytes.NewReader(outByte)
+    case "toml":
+        outByte, err := toml.Marshal(c)
+        if err != nil {
+            return nil, ConfigParseError{err}
+        }
+        out = bytes.NewReader(outByte)
+    default:
+        err = errors.New("does not support config type '" + configType + "'")
+        return nil, ConfigParseError{err}
+    }
+
+    return out, nil
+}
+
 func unmarshallConfigReader(in io.Reader, c map[string]interface{}, configType string) error {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(in)
@@ -160,7 +195,6 @@ func unmarshallConfigReader(in io.Reader, c map[string]interface{}, configType s
 	switch strings.ToLower(configType) {
 	case "ini":
 		if err := ini.Unmarshal(buf.Bytes(), &c); err != nil {
-            fmt.Println(err)
 			return ConfigParseError{err}
 		}
 	case "yaml", "yml":

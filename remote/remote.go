@@ -29,7 +29,7 @@ func (rc remoteConfigProvider) Set(rp viper.RemoteProvider, value []byte) error 
 }
 
 
-func (rc remoteConfigProvider) List(rp viper.RemoteProvider) (map[string][]byte, error) {
+func (rc remoteConfigProvider) List(rp viper.RemoteProvider) (map[string]io.Reader, error) {
     cm, err := getConfigManager(rp)
     if err != nil {
         return err
@@ -40,7 +40,7 @@ func (rc remoteConfigProvider) List(rp viper.RemoteProvider) (map[string][]byte,
     }
     list := make(map[string][]byte, 0)
     for _, kvPair := range kvPairs {
-        list[kvPair.Key] = kvPair.Value
+        list[kvPair.Key] = bytes.NewReader(kvPair.Value)
     }
     return list, nil
 }
