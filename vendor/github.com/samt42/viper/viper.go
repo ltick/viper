@@ -52,7 +52,7 @@ func init() {
 
 type remoteConfigFactory interface {
 	Set(rp RemoteProvider, value []byte) error
-    List(rp RemoteProvider) (map[string][]byte, error)
+    List(rp RemoteProvider) (map[string]io.Reader, error)
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
 	WatchChannel(rp RemoteProvider) (<-chan *RemoteResponse, chan bool)
@@ -1298,19 +1298,24 @@ func (v *Viper) WriteRemoteConfig(value []byte) error {
 }
 
 //ListRemoteConfig attempts to set configuration to a remote source
-func ListRemoteConfig() (map[string][]byte, error) { return v.ListRemoteConfig() }
-func (v *Viper) ListRemoteConfig() (map[string][]byte, error) {
+func ListRemoteConfig() (map[string]interface{}, error) { return v.ListRemoteConfig() }
+func (v *Viper) ListRemoteConfig() (map[string]interface{}, error) {
 	if RemoteConfig == nil {
 		return nil, RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
 	}
-	list := make(map[string][]byte, 0)
+	list := make(map[string]interface{}, 0)
 	for _, rp := range v.remoteProviders {
 		remoteList, err := RemoteConfig.List(rp)
 		if err != nil {
 			return nil, RemoteConfigError("List RemoteConfig error: " + err.Error())
 		}
-		for k, v := range remoteList {
-			list[k] = v
+		for remoteKey, remoteValueIn := range remoteList {
+			remoteValue := make(map[string]interface{}, 0)
+			err := v.unmarshalReader(remoteValueIn, remoteValue)
+			if err != nil {
+				return nil, RemoteConfigError("List RemoteConfig error: " + err.Error())
+			}
+			list[remoteKey] = remoteValue
 		}
 	}
 	return list, nil
