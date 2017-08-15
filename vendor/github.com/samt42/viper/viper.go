@@ -1285,7 +1285,7 @@ func mergeMaps(
 func WriteRemoteConfig(value []byte) error { return v.WriteRemoteConfig(value) }
 func (v *Viper) WriteRemoteConfig(value []byte) error {
 	if RemoteConfig == nil {
-		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
+		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/samt42/viper/remote'")
 	}
 
 	for _, rp := range v.remoteProviders {
@@ -1301,7 +1301,7 @@ func (v *Viper) WriteRemoteConfig(value []byte) error {
 func ListRemoteConfig() (map[string]interface{}, error) { return v.ListRemoteConfig() }
 func (v *Viper) ListRemoteConfig() (map[string]interface{}, error) {
 	if RemoteConfig == nil {
-		return nil, RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
+		return nil, RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/samt42/viper/remote'")
 	}
 	list := make(map[string]interface{}, 0)
 	for _, rp := range v.remoteProviders {
@@ -1357,7 +1357,7 @@ func (v *Viper) insensitiviseMaps() {
 // Retrieve the first found remote configuration.
 func (v *Viper) getKeyValueConfig() error {
 	if RemoteConfig == nil {
-		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/ltick/viper/remote'")
+		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/samt42/viper/remote'")
 	}
 
 	for _, rp := range v.remoteProviders {
