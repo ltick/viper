@@ -89,7 +89,7 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-  revision = "72d33e86d739456273c6a08eb8f5e009c871a02d"
+  revision = "1e7dc59cf3c0f79a69214819d3b003d73a5a00d1"
 
 [[projects]]
   branch = "master"
@@ -149,13 +149,13 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "c84c1ab9fd18cdd4c23dd021c10f5f46dea95e46"
+  revision = "2d3e384235de683634e9080b58f757466840aa48"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
   packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
-  revision = "b19bf474d317b857955b12035d2c5acb57ce8b01"
+  revision = "e56139fd9c5bc7244c76116c68e500765bb6db6b"
 
 [[projects]]
   branch = "v2"
