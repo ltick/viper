@@ -1,14 +1,11 @@
 package memcache
 
 import (
-	"errors"
-	"path"
-	"strings"
 	"time"
 	"fmt"
 
 	"github.com/bradfitz/gomemcache/memcache"
-	"crypt/backend"
+	"github.com/ltick/crypt/backend"
 )
 
 type Client struct{
@@ -17,7 +14,7 @@ type Client struct{
 
 func New(machines []string) (*Client, error) {
 	return &Client{
-		client: memcache.New(machines...)
+		client: memcache.New(machines...),
 	}, nil
 }
 
@@ -46,7 +43,7 @@ func (c *Client) Set(key string, value []byte) error {
 	}
 	err := c.client.Set(item)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	return nil
 }
