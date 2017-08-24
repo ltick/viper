@@ -89,7 +89,7 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-  revision = "319184b8a35b55b759df001b6b444af344562c13"
+  revision = "17f6db809af932664282959788d0120db0b909f8"
 
 [[projects]]
   branch = "master"
