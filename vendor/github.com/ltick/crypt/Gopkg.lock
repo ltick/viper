@@ -29,7 +29,11 @@
   branch = "master"
   name = "github.com/ltick/crypt"
   packages = ["backend","backend/consul","backend/etcd","backend/memcache","backend/mock","backend/zookeeper","encoding/secconf"]
+<<<<<<< HEAD
   revision = "46dd54320d0cf2d6a881084da875290b992295c5"
+=======
+  revision = "cb824616ab590f2faf13e887687734e707ba54d4"
+>>>>>>> parent of 4e8ec93... update ini parser
 
 [[projects]]
   branch = "master"

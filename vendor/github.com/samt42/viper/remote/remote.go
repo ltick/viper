@@ -17,31 +17,32 @@ import (
 type remoteConfigProvider struct{}
 
 func (rc remoteConfigProvider) Set(rp viper.RemoteProvider, value []byte) error {
-	cm, err := getConfigManager(rp)
-	if err != nil {
-		return err
-	}
-	err = cm.Set(rp.Path(), value)
-	if err != nil {
-		return err
-	}
-	return nil
+    cm, err := getConfigManager(rp)
+    if err != nil {
+        return err
+    }
+    err = cm.Set(rp.Path(), value)
+    if err != nil {
+        return err
+    }
+    return nil
 }
 
+
 func (rc remoteConfigProvider) List(rp viper.RemoteProvider) (map[string]io.Reader, error) {
-	cm, err := getConfigManager(rp)
-	if err != nil {
-		return nil, err
-	}
-	kvPairs, err := cm.List(rp.Path())
-	if err != nil {
-		return nil, err
-	}
-	list := make(map[string]io.Reader, 0)
-	for _, kvPair := range kvPairs {
-		list[kvPair.Key] = bytes.NewReader(kvPair.Value)
-	}
-	return list, nil
+    cm, err := getConfigManager(rp)
+    if err != nil {
+        return err
+    }
+    kvPairs, err := cm.List(rp.Path())
+    if err != nil {
+        return err
+    }
+    list := make(map[string][]byte, 0)
+    for _, kvPair := range kvPairs {
+        list[kvPair.Key] = bytes.NewReader(kvPair.Value)
+    }
+    return list, nil
 }
 
 func (rc remoteConfigProvider) Get(rp viper.RemoteProvider) (io.Reader, error) {
