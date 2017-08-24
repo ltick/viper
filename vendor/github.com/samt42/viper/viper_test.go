@@ -45,6 +45,7 @@ switcher_4 = Y
 switcher_5 = N
 flag = 1
 [dev]
+string = testing_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_longlong_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long
 string_1.1 = "testing_dev"
 string_2.2 = "testing_dev"
 `)
@@ -547,7 +548,7 @@ func TestAllKeys(t *testing.T) {
 		"switcher_5": false,
 		"flag":       1,
 		"dev": map[string]interface{}{
-			"string":          "testing",
+			"string":          "testing_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_longlong_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long",
 			"string_1":        map[string]interface{}{"1": "testing_dev"},
 			"string_2":        map[string]interface{}{"1": "testing", "2": "testing_dev"},
 			"string_3":        map[string]interface{}{"1": map[string]interface{}{"1": "testing_1", "2": "testing_2"}},

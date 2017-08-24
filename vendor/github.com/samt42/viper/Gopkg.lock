@@ -47,13 +47,13 @@
   branch = "master"
   name = "github.com/ltick/crypt"
   packages = ["backend","backend/consul","backend/etcd","backend/memcache","backend/zookeeper","config","encoding/secconf"]
-  revision = "605a53d5ad44150b6d6653b73b1bfcd85aec1acb"
+  revision = "1f3db32e8a942d23cc9de636a573fa7d5a6fcc5f"
 
 [[projects]]
   branch = "master"
   name = "github.com/ltick/go-ini"
   packages = ["."]
-  revision = "2086409461b99c97a8329aeadb7742d338cd7f9a"
+  revision = "7b3b9b485a3d0a14d6ca9955d6528083941471fc"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -89,13 +89,13 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-  revision = "1e7dc59cf3c0f79a69214819d3b003d73a5a00d1"
+  revision = "c27b487a3b79caac9b10579e419cbecb83e0bf2e"
 
 [[projects]]
   branch = "master"
   name = "github.com/samuel/go-zookeeper"
   packages = ["zk"]
-  revision = "8ac67fae881ed12e87206ba2243c75b079b419a4"
+  revision = "e6b59f6144beb8570562539c1898a0b1fea34b41"
 
 [[projects]]
   branch = "master"
@@ -149,7 +149,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "2d3e384235de683634e9080b58f757466840aa48"
+  revision = "43e60d72a8e2bd92ee98319ba9a384a0e9837c08"
 
 [[projects]]
   branch = "master"
