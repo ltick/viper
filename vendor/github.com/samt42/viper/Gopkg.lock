@@ -47,17 +47,13 @@
   branch = "master"
   name = "github.com/ltick/crypt"
   packages = ["backend","backend/consul","backend/etcd","backend/memcache","backend/zookeeper","config","encoding/secconf"]
-<<<<<<< HEAD
-  revision = "1236f61042c09f0266a825f996acfb802749bb40"
-=======
-  revision = "605a53d5ad44150b6d6653b73b1bfcd85aec1acb"
->>>>>>> parent of 4e8ec93... update ini parser
+  revision = "a23ed4bcac24363616eef3af35ed231523400cd1"
 
 [[projects]]
   branch = "master"
   name = "github.com/ltick/go-ini"
   packages = ["."]
-  revision = "2086409461b99c97a8329aeadb7742d338cd7f9a"
+  revision = "7b3b9b485a3d0a14d6ca9955d6528083941471fc"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -93,17 +89,13 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-<<<<<<< HEAD
-  revision = "5ebe6772c3a242de3f3ca03af04a3bce985b4fae"
-=======
-  revision = "1e7dc59cf3c0f79a69214819d3b003d73a5a00d1"
->>>>>>> parent of 4e8ec93... update ini parser
+  revision = "4fd92f83440871316a5acd511624af2021158c76"
 
 [[projects]]
   branch = "master"
   name = "github.com/samuel/go-zookeeper"
   packages = ["zk"]
-  revision = "8ac67fae881ed12e87206ba2243c75b079b419a4"
+  revision = "e6b59f6144beb8570562539c1898a0b1fea34b41"
 
 [[projects]]
   branch = "master"
@@ -157,11 +149,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-<<<<<<< HEAD
   revision = "07c182904dbd53199946ba614a412c61d3c548f5"
-=======
-  revision = "2d3e384235de683634e9080b58f757466840aa48"
->>>>>>> parent of 4e8ec93... update ini parser
 
 [[projects]]
   branch = "master"

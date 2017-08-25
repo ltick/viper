@@ -13,50 +13,50 @@ import (
 var connectTimeout time.Duration = 120 * time.Second
 
 type Client struct {
-	client    *zk.Conn
-	keyPrefix string
-	user      string
-	password  string
-	errors    chan error
+	client   *zk.Conn
+	user     string
+	password string
+	errors   chan error
 }
 
-func New(machines []string, keyPrefix string, user string, password string) (*Client, error) {
-	for index, machine := range machines {
-		machines[index] = strings.TrimSpace(machine)
-	}
-	client, _, err := zk.Connect(machines, connectTimeout)
-	if err != nil {
-		return nil, err
-	}
-	c := &Client{
-		client:    client,
-		keyPrefix: keyPrefix,
-		user:      user,
-		password:  password,
-		errors:    make(chan error, 1),
-	}
-	if err = c.addAuth(); err != nil {
-		return nil, err
-	}
-	go func() {
-		for {
-			select {
-			case err := <-c.errors:
-				if err == zk.ErrSessionExpired {
-					c.addAuth()
-				} else {
-					//log
-				}
-			}
-		}
-	}()
-	return c, nil
+var client *Client
+
+func New(machines []string, user string, password string) (*Client, error) {
+    if client != nil {
+        return client, nil
+    }
+    for index, machine := range machines {
+        machines[index] = strings.TrimSpace(machine)
+    }
+    zkClient, _, err := zk.Connect(machines, connectTimeout)
+    if err != nil {
+        return nil, err
+    }
+    client = &Client{
+        client:   zkClient,
+        user:     user,
+        password: password,
+        errors:   make(chan error, 1),
+    }
+    if err = client.addAuth(); err != nil {
+        return nil, err
+    }
+    go func() {
+        for {
+            select {
+            case err := <-client.errors:
+                if err == zk.ErrSessionExpired {
+                    client.addAuth()
+                } else {
+                    //log
+                }
+            }
+        }
+    }()
+    return client, nil
 }
 
 func (c *Client) Get(key string) ([]byte, error) {
-	if c.keyPrefix != "" {
-		key = strings.TrimRight(c.keyPrefix, "/") + "/" + key
-	}
 	value, _, err := c.client.Get(key)
 	if err != nil {
 		c.errors <- err
@@ -71,10 +71,7 @@ func (c *Client) List(key string) (backend.KVPairs, error) {
 }
 
 func (c *Client) Set(key string, value []byte) error {
-	if c.keyPrefix != "" {
-		key = strings.TrimRight(c.keyPrefix, "/") + "/" + key
-	}
-	value, stat, err := c.client.Get(key)
+	_, stat, err := c.client.Get(key)
 	if err != nil {
 		if err == zk.ErrNoNode {
 			_, err = c.client.Create(key, value, 0, zk.WorldACL(zk.PermAll))
@@ -94,9 +91,6 @@ func (c *Client) Set(key string, value []byte) error {
 }
 
 func (c *Client) Watch(key string, stop chan bool) <-chan *backend.Response {
-	if c.keyPrefix != "" {
-		key = strings.TrimRight(c.keyPrefix, "/") + "/" + key
-	}
 	respChan := make(chan *backend.Response, 0)
 	go func() {
 		exists, _, event, err := c.client.ExistsW(key)
