@@ -228,7 +228,7 @@ func (rp defaultRemoteProvider) SecretKeyring() string {
 // can be provided.
 type RemoteProvider interface {
 	Provider() string
-	Endpoint() string
+	Endpoint() []string
 	Path() string
 	Config() map[string]string
 	SecretKeyring() string
