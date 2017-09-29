@@ -206,8 +206,8 @@ func (rp defaultRemoteProvider) Provider() string {
 	return rp.provider
 }
 
-func (rp defaultRemoteProvider) Endpoint() string {
-	return rp.endpoint
+func (rp defaultRemoteProvider) Endpoint() []string {
+	return strings.Split(rp.endpoint, ",")
 }
 
 func (rp defaultRemoteProvider) Path() string {
