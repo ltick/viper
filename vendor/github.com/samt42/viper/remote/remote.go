@@ -111,26 +111,26 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		}
 		switch rp.Provider() {
 		case "etcd":
-			cm, err = crypt.NewEtcdConfigManager([]string{rp.Endpoint()}, kr)
+			cm, err = crypt.NewEtcdConfigManager(rp.Endpoint(), kr)
 		case "consul":
-			cm, err = crypt.NewConsulConfigManager([]string{rp.Endpoint()}, kr)
+			cm, err = crypt.NewConsulConfigManager(rp.Endpoint(), kr)
 		case "memcache":
-			cm, err = crypt.NewMemcacheConfigManager([]string{rp.Endpoint()}, kr)
+			cm, err = crypt.NewMemcacheConfigManager(rp.Endpoint(), kr)
 		case "zookeeper":
 			config := rp.Config()
-			cm, err = crypt.NewZookeeperConfigManager([]string{rp.Endpoint()}, config["user"], config["password"], kr)
+			cm, err = crypt.NewZookeeperConfigManager(rp.Endpoint(), config["user"], config["password"], kr)
 		}
 	} else {
 		switch rp.Provider() {
 		case "etcd":
-			cm, err = crypt.NewStandardEtcdConfigManager([]string{rp.Endpoint()})
+			cm, err = crypt.NewStandardEtcdConfigManager(rp.Endpoint())
 		case "consul":
-			cm, err = crypt.NewStandardConsulConfigManager([]string{rp.Endpoint()})
+			cm, err = crypt.NewStandardConsulConfigManager(rp.Endpoint())
 		case "memcache":
-			cm, err = crypt.NewStandardMemcacheConfigManager([]string{rp.Endpoint()})
+			cm, err = crypt.NewStandardMemcacheConfigManager(rp.Endpoint())
 		case "zookeeper":
 			config := rp.Config()
-			cm, err = crypt.NewStandardZookeeperConfigManager([]string{rp.Endpoint()}, config["user"], config["password"])
+			cm, err = crypt.NewStandardZookeeperConfigManager(rp.Endpoint(), config["user"], config["password"])
 		}
 	}
 	if err != nil {
