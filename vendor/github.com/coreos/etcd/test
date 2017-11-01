@@ -82,8 +82,16 @@ fi
 
 function unit_pass {
 	echo "Running unit tests..."
+	GO_TEST_FLAG=""
+	if [ "${VERBOSE}" == "1" ]; then
+		GO_TEST_FLAG="-v"
+	fi
+	if [ "${VERBOSE}" == "2" ]; then
+		GO_TEST_FLAG="-v"
+		export CLIENT_DEBUG=1
+	fi
 	# only -run=Test so examples can run in integration tests
-	go test -timeout 3m "${COVER}" ${RACE} -cpu 1,2,4 -run=Test "$@" "${TEST[@]}"
+	go test ${GO_TEST_FLAG} -timeout 3m "${COVER}" ${RACE} -cpu 1,2,4 -run=Test "$@" "${TEST[@]}"
 }
 
 function integration_pass {
@@ -382,6 +390,17 @@ function fmt_pass {
 		fi
 	else
 		echo "Skipping staticcheck..."
+	fi
+
+	if which ineffassign >/dev/null; then
+		echo "Checking ineffassign..."
+		ineffassignResult=$(ineffassign "${STATIC_ANALYSIS_PATHS[@]}" 2>&1 || true)
+		if [ -n "${ineffassignResult}" ]; then
+			echo -e "ineffassign checking failed:\n${ineffassignResult}"
+			exit 255
+		fi
+	else
+		echo "Skipping ineffassign..."
 	fi
 
 	echo "Checking for license header..."

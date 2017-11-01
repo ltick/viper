@@ -84,7 +84,7 @@ type Config struct {
 	MaxWalFiles             uint   `json:"max-wals"`
 	Name                    string `json:"name"`
 	SnapCount               uint64 `json:"snapshot-count"`
-	AutoCompactionRetention int    `json:"auto-compaction-retention"`
+	AutoCompactionRetention string `json:"auto-compaction-retention"`
 	AutoCompactionMode      string `json:"auto-compaction-mode"`
 
 	// TickMs is the number of milliseconds between heartbeat ticks.
@@ -397,7 +397,9 @@ func (cfg *Config) PeerURLsMapAndToken(which string) (urlsmap types.URLsMap, tok
 		}
 		clusterStr := strings.Join(clusterStrs, ",")
 		if strings.Contains(clusterStr, "https://") && cfg.PeerTLSInfo.CAFile == "" {
-			cfg.PeerTLSInfo.ServerName = cfg.DNSCluster
+			// SRV targets have subdomains under the given DNSCluster, so wildcard matching
+			// is needed.
+			cfg.PeerTLSInfo.ServerName = "*." + cfg.DNSCluster
 		}
 		urlsmap, err = types.NewURLsMap(clusterStr)
 		// only etcd member must belong to the discovered cluster.

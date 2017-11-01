@@ -17,7 +17,7 @@
   branch = "master"
   name = "github.com/coreos/etcd"
   packages = ["client","pkg/pathutil","pkg/srv","pkg/types","version"]
-  revision = "2cfe0d677471e7b264030925d229e825317c814f"
+  revision = "3ac54be402ffe4e6df505814456d4931508aaf21"
 
 [[projects]]
   name = "github.com/coreos/go-semver"
@@ -41,7 +41,7 @@
   branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [".","hcl/ast","hcl/parser","hcl/scanner","hcl/strconv","hcl/token","json/parser","json/scanner","json/token"]
-  revision = "68e816d1c783414e79bc65b3994d9ab6b0a722ab"
+  revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
 
 [[projects]]
   branch = "master"
@@ -65,19 +65,13 @@
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "d0303fe809921458f417bcf828397a65db30a7e4"
-
-[[projects]]
-  name = "github.com/pelletier/go-buffruneio"
-  packages = ["."]
-  revision = "c37440a7cf42ac63b919c752ca73a85067e05992"
-  version = "v0.2.0"
+  revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
 
 [[projects]]
   name = "github.com/pelletier/go-toml"
   packages = ["."]
-  revision = "5ccdfb18c776b740aecaf085c4d9a2779199c279"
-  version = "v1.0.0"
+  revision = "16398bac157da96aa88f98a2df640c7f32af1da2"
+  version = "v1.0.1"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -89,19 +83,19 @@
   branch = "master"
   name = "github.com/samt42/viper"
   packages = ["."]
-  revision = "a73df07d775bde4e1d0fceacdcc01ca94a7b33ab"
+  revision = "cc0b88be9301e652df168a7ab2ecbfe10a4a31fc"
 
 [[projects]]
   branch = "master"
   name = "github.com/samuel/go-zookeeper"
   packages = ["zk"]
-  revision = "e6b59f6144beb8570562539c1898a0b1fea34b41"
+  revision = "9a96098268ef555eb1f04d8b1ee813d0a87e5089"
 
 [[projects]]
   branch = "master"
   name = "github.com/spf13/afero"
   packages = [".","mem"]
-  revision = "ee1bd8ee15a1306d1f9201acc41ef39cd9f99a1b"
+  revision = "5660eeed305fe5f69c8fc6cf899132a459a97064"
 
 [[projects]]
   name = "github.com/spf13/cast"
@@ -131,25 +125,25 @@
   branch = "master"
   name = "github.com/ugorji/go"
   packages = ["codec"]
-  revision = "54210f4e076c57f351166f0ed60e67d3fca57a36"
+  revision = "50189f05eaf5a0c17e5084eb8f7fb91e23699840"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["cast5","openpgp","openpgp/armor","openpgp/elgamal","openpgp/errors","openpgp/packet","openpgp/s2k"]
-  revision = "76eec36fa14229c4b25bb894c2d0e591527af429"
+  revision = "bd6f299fb381e4c3393d1c4b1f0b94f5e77650c8"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "314a259e304ff91bd6985da2a7149bbf91237993"
+  revision = "95c6576299259db960f6c5b9b69ea52422860fce"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
   packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
-  revision = "1cbadb444a806fd9430d14ad08967ed91da4fa0a"
+  revision = "7d4e23b25beca3bc3b804ab134f0b12b4ca909d1"
 
 [[projects]]
   branch = "v2"

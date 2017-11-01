@@ -1,5 +1,11 @@
+ErrCodeEnhanceYourCalm
+ErrTimeout
+GoAway
 RPC
 RPCs
+TODO
+backoff
+blackhole
 blackholed
 cancelable
 cancelation
@@ -10,6 +16,7 @@ etcd
 gRPC
 goroutine
 goroutines
+healthcheck
 iff
 inflight
 keepalive
@@ -20,6 +27,7 @@ localhost
 mutex
 prefetching
 protobuf
+repin
 serializable
 teardown
 too_many_pings
