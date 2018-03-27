@@ -26,6 +26,7 @@ import (
 	"text/template"
 
 	"github.com/coreos/etcd/version"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

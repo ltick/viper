@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"errors"
 	"context"
+	"errors"
 
 	"github.com/ltick/crypt/backend"
 	"github.com/samuel/go-zookeeper/zk"
@@ -18,6 +18,7 @@ type Client struct {
 	user     string
 	password string
 	errors   chan error
+	logger   backend.Logger
 }
 
 var client *Client
@@ -68,6 +69,18 @@ func (c *Client) Get(key string) ([]byte, error) {
 
 func (c *Client) List(key string) (backend.KVPairs, error) {
 	list := make(backend.KVPairs, 0)
+	listKeys, _, err := c.client.Children(key)
+	if err != nil {
+		c.errors <- err
+		return nil, errors.New("zookeeper: List " + key + " error")
+	}
+	for _, listKey := range listKeys {
+		listValue, err := c.Get(listKey)
+		if err != nil {
+			return nil, errors.New("zookeeper: List " + key + " error")
+		}
+		list = append(list, &backend.KVPair{Key:listKey, Value:listValue})
+	}
 	return list, nil
 }
 
@@ -128,6 +141,11 @@ func (c *Client) WatchWithContext(ctx context.Context, key string, stop chan boo
 		}
 	}()
 	return respChan
+}
+
+func (c *Client) SetLogger(l backend.Logger) {
+	c.logger = l
+	c.client.SetLogger(l)
 }
 
 func (c *Client) addAuth() error {

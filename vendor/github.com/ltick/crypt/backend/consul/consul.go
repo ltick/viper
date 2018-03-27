@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/ltick/crypt/backend"
-
 	"github.com/armon/consul-api"
 )
 
 type Client struct {
 	client    *consulapi.KV
 	waitIndex uint64
+	logger    backend.Logger
 }
 
 func New(machines []string) (*Client, error) {
@@ -84,4 +84,8 @@ func (c *Client) Watch(key string, stop chan bool) <-chan *backend.Response {
 		}
 	}()
 	return respChan
+}
+
+func (c *Client) SetLogger(l backend.Logger) {
+	c.logger = l
 }
