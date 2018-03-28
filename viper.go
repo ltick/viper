@@ -30,6 +30,7 @@ import (
 	"reflect"
 	"strings"
 	"time"
+	"io/ioutil"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/mitchellh/mapstructure"
@@ -1307,13 +1308,12 @@ func (v *Viper) ListRemoteConfig() (map[string]interface{}, error) {
 	for _, rp := range v.remoteProviders {
 		remoteList, err := RemoteConfig.List(rp)
 		if err != nil {
-			return nil, RemoteConfigError("List RemoteConfig error: " + err.Error())
+			return nil, RemoteConfigError("List Remote Config error: " + err.Error())
 		}
 		for remoteKey, remoteValueIn := range remoteList {
-			remoteValue := make(map[string]interface{}, 0)
-			err := v.unmarshalReader(remoteValueIn, remoteValue)
+			remoteValue, err := ioutil.ReadAll(remoteValueIn)
 			if err != nil {
-				return nil, RemoteConfigError("List RemoteConfig error: " + err.Error())
+				return nil, RemoteConfigError("List Remote Config error: " + err.Error())
 			}
 			list[remoteKey] = remoteValue
 		}
