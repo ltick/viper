@@ -53,6 +53,7 @@ func init() {
 
 type remoteConfigFactory interface {
 	Set(rp RemoteProvider, value []byte) error
+	Delete(rp RemoteProvider) error
 	List(rp RemoteProvider) (map[string]io.Reader, error)
 	Get(rp RemoteProvider) (io.Reader, error)
 	Watch(rp RemoteProvider) (io.Reader, error)
@@ -1293,6 +1294,22 @@ func (v *Viper) WriteRemoteConfig(value []byte) error {
 		err := RemoteConfig.Set(rp, value)
 		if err != nil {
 			return RemoteConfigError("Write RemoteConfig error: " + err.Error())
+		}
+	}
+	return nil
+}
+
+//RemoveRemoteConfig attempts to remove configuration to a remote source
+func RemoveRemoteConfig() error { return v.RemoveRemoteConfig() }
+func (v *Viper) RemoveRemoteConfig() error {
+	if RemoteConfig == nil {
+		return RemoteConfigError("Enable the remote features by doing a blank import of the viper/remote package: '_ github.com/samt42/viper/remote'")
+	}
+
+	for _, rp := range v.remoteProviders {
+		err := RemoteConfig.Delete(rp)
+		if err != nil {
+			return RemoteConfigError("Remove RemoteConfig error: " + err.Error())
 		}
 	}
 	return nil

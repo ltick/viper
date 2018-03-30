@@ -30,6 +30,8 @@ type ConfigManager interface {
 	List(key string) (KVPairs, error)
 	Set(key string, value []byte) error
 	Watch(key string, stop chan bool) <-chan *Response
+	Delete(key string) error
+	SetLogger(l backend.Logger)
 }
 
 type standardConfigManager struct {

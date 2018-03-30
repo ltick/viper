@@ -28,6 +28,18 @@ func (rc remoteConfigProvider) Set(rp viper.RemoteProvider, value []byte) error 
 	return nil
 }
 
+func (rc remoteConfigProvider) Delete(rp viper.RemoteProvider) error {
+	cm, err := getConfigManager(rp)
+	if err != nil {
+		return err
+	}
+	err = cm.Delete(rp.Path())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (rc remoteConfigProvider) List(rp viper.RemoteProvider) (map[string]io.Reader, error) {
 	cm, err := getConfigManager(rp)
 	if err != nil {
