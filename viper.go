@@ -1380,7 +1380,7 @@ func (v *Viper) getKeyValueConfig() error {
 	for _, rp := range v.remoteProviders {
 		val, err := v.getRemoteConfig(rp)
 		if err != nil {
-			return RemoteConfigError("Get remote config error: " + err.Error())
+			continue
 		}
 		v.kvstore = val
 		return nil
