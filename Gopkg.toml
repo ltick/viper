@@ -47,14 +47,10 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/samt42/viper"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/spf13/afero"
 
 [[constraint]]
-  name = "github.com/spf13/cast"
+  name = "githubt .com/spf13/cast"
   version = "1.1.0"
 
 [[constraint]]
@@ -66,7 +62,7 @@
   version = "1.0.0"
 
 [[constraint]]
-  branch = "v2"
+  version = "2.1.1"
   name = "gopkg.in/yaml.v2"
 
 [[constraint]]
